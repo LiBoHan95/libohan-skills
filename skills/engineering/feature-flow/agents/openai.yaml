@@ -1,0 +1,3 @@
+interface:
+  display_name: "Feature Flow"
+  short_description: "需求对齐→设计→实现的开发流程"

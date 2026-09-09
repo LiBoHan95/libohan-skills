@@ -1,0 +1,14 @@
+# engineering
+
+日常写代码用的技能。
+
+## Model-invoked
+
+| 技能 | 说明 |
+|---|---|
+| [bug-fix-flow](bug-fix-flow/SKILL.md) | 调研 → 方案 → 实现 → 验证，修复已约定行为失效的问题 |
+| [feature-flow](feature-flow/SKILL.md) | 需求对齐 → 设计 → 方案 → 实现 → 测试 → review，开发新功能 |
+
+## User-invoked
+
+目前没有。

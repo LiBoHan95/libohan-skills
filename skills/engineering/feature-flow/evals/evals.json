@@ -1,0 +1,147 @@
+{
+  "description": "Feature Flow Skill 评估测试",
+  "description_isolation": [
+    {
+      "prompt": "给我加一个搜索功能",
+      "expect": "trigger",
+      "note": "典型的添加新功能请求"
+    },
+    {
+      "prompt": "实现用户注册页面",
+      "expect": "trigger",
+      "note": "新页面开发"
+    },
+    {
+      "prompt": "扩展现有 API，添加一个批量查询接口",
+      "expect": "trigger",
+      "note": "扩展现有接口"
+    },
+    {
+      "prompt": "写一个导出 CSV 的工具函数",
+      "expect": "trigger",
+      "note": "添加新工具/模块"
+    },
+    {
+      "prompt": "我们需要做支付模块，支持微信和支付宝",
+      "expect": "trigger",
+      "note": "复杂新功能"
+    },
+    {
+      "prompt": "帮我修一下这个按钮点不了的 bug",
+      "expect": "no-trigger",
+      "note": "纯 bug 修复，应走 bug-fix-flow"
+    },
+    {
+      "prompt": "简单配置，把 timeout 从 5s 改成 30s",
+      "expect": "no-trigger",
+      "note": "简单配置修改"
+    },
+    {
+      "prompt": "审查一下我刚刚的改动",
+      "expect": "no-trigger",
+      "note": "纯代码审查"
+    },
+    {
+      "prompt": "这个网站性能太差了，优化一下",
+      "expect": "no-trigger",
+      "note": "纯性能优化，非功能开发"
+    },
+    {
+      "prompt": "为这个新功能写一份 API 文档",
+      "expect": "no-trigger",
+      "note": "纯文档撰写"
+    },
+    {
+      "prompt": "添加一个忘记密码的流程",
+      "expect": "trigger",
+      "note": "添加新功能流程"
+    },
+    {
+      "prompt": "做一下用户权限管理功能",
+      "expect": "trigger",
+      "note": "跨模块新功能"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "简单 UI 组件开发",
+      "prompt": "给列表页加一个排序下拉框，用户可以按时间、按名称排序",
+      "expect": "跳过 Phase 0，进入 Phase 1-2 评估影响范围，给出组件方案，确认后实现"
+    },
+    {
+      "name": "模糊需求",
+      "prompt": "我们想要一个推荐功能",
+      "expect": "进入 Phase 0 需求对齐，澄清推荐算法逻辑、数据来源、展示位置"
+    },
+    {
+      "name": "跨层功能",
+      "prompt": "加一个批量删除用户的功能，前端验证提示框 + API + 后端逻辑",
+      "expect": "进入 Phase 1 多 agent 调研现有批量操作模式，Phase 2 给出前后端方案"
+    },
+    {
+      "name": "数据迁移",
+      "prompt": "用户表要加一个头像字段，支持多平台适配",
+      "expect": "包含影响范围评估、后端 migration、兼容性、前端组件方案"
+    }
+  ],
+  "red_flags_test": [
+    {
+      "action": "方案未确认直接实现",
+      "expect": "red_flag",
+      "note": "必须遵守强制暂停点"
+    },
+    {
+      "action": "实现过程中顺手修 bug",
+      "expect": "red_flag",
+      "note": "scope control"
+    },
+    {
+      "action": "需求模糊时直接开始写代码",
+      "expect": "red_flag",
+      "note": "必须先对齐需求"
+    },
+    {
+      "action": "验收时仅靠类型检查通过声称功能正确",
+      "expect": "red_flag",
+      "note": "需要实际验证"
+    }
+  ],
+  "design_check": [
+    {
+      "feature": "有 Phase 0 且标记为 optional",
+      "pass": true
+    },
+    {
+      "feature": "方案的强制暂停点明确标注",
+      "pass": true
+    },
+    {
+      "feature": "有 scope 控制（不改设计外的东西）",
+      "pass": true
+    },
+    {
+      "feature": "与 bug-fix-flow 互斥的 trigger",
+      "pass": true
+    },
+    {
+      "feature": "包含安全停靠点和回退机制",
+      "pass": true
+    },
+    {
+      "feature": "兼容性/向后检查",
+      "pass": true
+    },
+    {
+      "feature": "与 tdd/code-review/research skill 的联动",
+      "pass": true
+    },
+    {
+      "feature": "影响范围评估",
+      "pass": true
+    },
+    {
+      "feature": "MVP 范围定义（必须/延后/不做）",
+      "pass": true
+    }
+  ]
+}
