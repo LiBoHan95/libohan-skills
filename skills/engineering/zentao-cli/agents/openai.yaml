@@ -1,0 +1,3 @@
+interface:
+  display_name: "Zentao CLI"
+  short_description: "用 zentao 命令行查 bug / 需求 / 任务 / 人员"

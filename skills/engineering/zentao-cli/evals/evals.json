@@ -1,0 +1,27 @@
+{
+  "skill_name": "zentao-cli",
+  "evals": [
+    {
+      "id": 1,
+      "name": "查编号取详情",
+      "prompt": "禅道 #18399 是什么问题？复现步骤发我看看。",
+      "expected_output": "调用 zentao show 18399 --format json（必要时先 zentao status 确认登录），从 body 字段提取正文和复现步骤、从 steps 展开图片链接，如实汇报。不解析中文表格，不猜测内容，不读源码。若会话失效且无密码，说明需要用户提供密码。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "全公司未关闭",
+      "prompt": "最近有哪些未关闭的 bug？",
+      "expected_output": "用 zentao list --scope unclosed --format json（默认 mine 只返回自己的，必须显式加 --scope unclosed 才是全公司）。提醒范围是未关闭；如需限定产品或很慢的全量可询问。不把 --scope mine 的结果当全公司结果。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "解决 bug 的写操作",
+      "prompt": "把 #18399 标记为已解决。",
+      "expected_output": "写操作先跟用户确认范围和参数，然后用 zentao resolve 18399（可先 --dry-run 预览）。不要加 --comment。执行后核对返回的状态校验结果。",
+      "files": []
+    }
+  ],
+  "evaluation_notes": "执行模型只接收 prompt、必要的仓库上下文及 skill；expected_output 仅供评估者使用。真实查询需要 zentao CLI 可用且已配置账号密码，否则只能评估信息不足时的行为。"
+}
