@@ -4,9 +4,7 @@ set -euo pipefail
 # 把本仓库 skills/ 下的技能链接进各个 agent harness 的技能目录。
 # 每个条目都是指向本仓库的符号链接，改了仓库内容即刻生效，不需要重装。
 #
-# 注意：~/.cc-switch/skills 由 cc-switch 应用管理，不要往那里写。
-# bug-fix-flow 和 feature-flow 已于 2026-09-09 从 cc-switch 注销，
-# 现在由本仓库直接管理这两个名字。
+# 已有同名真实目录时先备份到本仓库 backups/（已 gitignore）再建链接，不直接覆盖。
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 DESTS=("$HOME/.claude/skills" "$HOME/.agents/skills")
@@ -42,7 +40,7 @@ for DEST in "${DESTS[@]}"; do
 
     # 已存在的真实目录不直接删，先备份，避免覆盖用户内容。
     if [ -e "$target" ] && [ ! -L "$target" ]; then
-      backup="$HOME/.cc-switch/skill-backups/$(date +%Y%m%d_%H%M%S)_${name}"
+      backup="$REPO/backups/$(date +%Y%m%d_%H%M%S)_${name}"
       mkdir -p "$backup"
       mv "$target" "$backup/skill"
       echo "backed up $target -> $backup/skill"
