@@ -9,7 +9,7 @@
 - `engineering/`、`productivity/` 是**推广桶**，里面的技能必须出现在顶层 `README.md` 和桶自己的 `README.md` 里。
 - `misc/`、`in-progress/`、`deprecated/` 不是推广桶，里面的技能**不得**出现在顶层 `README.md` 里。
 
-推广桶目前只有 `engineering/`。需要新桶时再建目录和它的 `README.md`。
+推广桶目前有 `engineering/` 和 `productivity/`。需要新桶时再建目录和它的 `README.md`。
 
 ## 每个技能的结构
 

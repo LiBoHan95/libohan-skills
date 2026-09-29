@@ -1,0 +1,3 @@
+interface:
+  display_name: "Tavily Search"
+  short_description: "用 tvly 命令行搜索网络，返回 LLM 优化的结果"
