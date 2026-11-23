@@ -20,8 +20,8 @@ bash scripts/link-skills.sh
 
 | 技能 | 说明 |
 |---|---|
-| [bug-fix-flow](skills/engineering/bug-fix-flow/SKILL.md) | 调研 → 方案 → 实现 → 验证，修复已约定行为失效的问题 |
-| [feature-flow](skills/engineering/feature-flow/SKILL.md) | 需求对齐 → 设计 → 方案 → 实现 → 测试 → review，开发新功能 |
+| [bug-fix-flow](skills/engineering/bug-fix-flow/SKILL.md) | 调研 → 方案 → 实现 → 真实验证，修复已约定行为失效的问题 |
+| [feature-flow](skills/engineering/feature-flow/SKILL.md) | 需求对齐 → 设计（文档优先）→ 方案 → 实现 → 测试 → review，开发新功能 |
 | [zentao-cli](skills/engineering/zentao-cli/SKILL.md) | 用 zentao 命令行查公司禅道的 bug / 需求 / 任务 / 迭代 / 人员 |
 
 **productivity**
