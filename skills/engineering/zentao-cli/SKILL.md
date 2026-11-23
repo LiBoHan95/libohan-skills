@@ -38,7 +38,7 @@ zentao bug|story|task|iteration <动作>                    # 两级
 
 | 对象 | 动作 |
 | --- | --- |
-| `bug` | `list` `show` `comment` `edit-comment` `resolve` `activate` `assign` |
+| `bug` | `list` `show` `create` `edit` `comment` `edit-comment` `resolve` `activate` `assign` |
 | `story` | `list` `create` `show` `flow` `comment` `edit-comment` |
 | `task` | `list` `show` `create` `edit` `start` `finish` `cancel` `activate` `comment` `edit-comment` |
 | `iteration` | `list` `show` |
@@ -60,8 +60,9 @@ zentao bug list --format json            # 列表
 | 命令 | 用途与主要参数 |
 | --- | --- |
 | `zentao bug list` | `--type {assignedTo\|openedBy\|resolvedBy\|closedBy}` `--scope {mine\|unclosed\|all}` `--status` `--grep` `--product` `--project` `--sort {id\|pri\|severity\|openedDate}` `--all` `--full` |
+| `zentao bug create` / `bug edit <id...>` | **写操作**：提 / 改 bug；`--steps` 写重现步骤（支持 Markdown），`--image` 附图、`--attach` 加附件，`--dry-run` 先预览 |
 | `zentao story list` | `--status` `--grep` `--product` `--sort {id\|pri\|openedDate}` `--all` `--full`（**没有 `--scope` / `--type`**） |
-| `zentao story create` | **写操作**：提需求；`--project <迭代ID\|名称>` 直接建进迭代并自动关联（状态 active、阶段 projected），`--dry-run` 先预览 |
+| `zentao story create` | **写操作**：提需求；`--project <迭代ID\|名称>` 直接建进迭代并自动关联（状态 active、阶段 projected）；`--image` 附图到描述、`--image-verify` 到验收标准、`--attach` 加附件，`--dry-run` 先预览 |
 | `zentao task list` | `--status` `--grep` `--project` `--sort {id\|pri\|openedDate\|deadline}` `--scope {mine\|unclosed\|all}` `--all` `--full` |
 | `zentao <对象> show <id...>` | 详情：正文、附件、完整操作历史（`actions`） |
 | `zentao iteration list` | `--scope {undone\|all\|closed}` `--grep` `--full` |
@@ -71,7 +72,7 @@ zentao bug list --format json            # 列表
 | `zentao team` | 公司人员和岗位，`--dept` 按部门筛，`--grep` 按姓名/账号搜 |
 | `zentao bug resolve\|activate\|assign` / `task start\|finish\|cancel\|activate` / `story flow` | **写操作**，见文末红线 |
 
-**`--type` 在不同命令里含义完全不同**，别混：`bug list --type` 是**谁的 bug**（`assignedTo` 默认 / `openedBy` / `resolvedBy` / `closedBy`）；`search` / `iteration show` 的 `--type` 是**对象类型**。`show` 现在不再需要 `--type`，对象写在命令里。
+**`--type` 在不同命令里含义完全不同**，别混：`bug list --type` 是**谁的 bug**（`assignedTo` 默认 / `openedBy` / `resolvedBy` / `closedBy`）；`search` / `iteration show` 的 `--type` 是**对象类型**；`bug create` / `bug edit` 的 `--type` 是 **bug 类型**（`codeerror` / `config` / …）。`show` 现在不再需要 `--type`，对象写在命令里。
 
 ## 范围：默认只看「我的」
 
@@ -106,10 +107,16 @@ zentao task list --scope all --project 某项目 --format json       # 某项目
 
 ## 写操作红线
 
-`resolve`（解决 bug）、`activate`（激活 bug）、`assign`（改派）、`comment`（加备注）、任务状态流转、`story create` / `task create` 都会**真实改动公司共享数据并给同事发通知**。
+`resolve`（解决 bug）、`activate`（激活 bug）、`assign`（改派）、`comment`（加备注）、`bug create` / `bug edit`（提 / 改 bug）、任务创建 / 编辑 / 状态流转、`story create` / `story flow` 都会**真实改动公司共享数据并给同事发通知**。
+
+- **bug 的正文是重现步骤（`steps`），用 `--steps` 写**，支持轻量 Markdown；`zentao bug create` 一次提一条（`--title` 必填，`--steps` 不传就用页面的 `[步骤]/[结果]/[期望]` 模板），`zentao bug edit <id...>` 可批量改字段（**没给的字段保持原样**）。
+- `bug create` / `bug edit` 的 `--type` 是 **bug 类型**（`codeerror` / `config` / …，也吃「代码错误」这类中文名），和 `bug list --type`（谁的 bug）不是一回事。
+- **图片用 `--image PATH`**（可重复，png/jpg/jpeg/gif/bmp/webp）：备注、bug / 需求 / 任务正文和状态流转备注都支持，附在字段末尾；`story create` 另有 `--image-verify` 附到验收标准。只发图片时备注传空串 `""`。工具先上传图片再提交并回读校验；dry-run 只校验本地文件、**不上传**。
+- **附件用 `--attach PATH`**（可重复）：支持 `bug create` / `bug edit` / `bug resolve` / `bug activate` / `story create` / `task create` / `task edit` / `task finish`；备注、`story flow` 和 `task start` / `cancel` / `activate` **没有附件入口**，只能贴图。附件走表单 `files[]`，dry-run 不上传。
 
 - **需求要进迭代就用 `--project`，不要开浏览器**：`zentao story create --project <迭代ID|名称> --title "…"` 走迭代上下文建需求，服务端在同一次请求里写 `projectstory` 关联，状态直接 `active`、阶段 `projected`——不需要 `--no-review`。不带 `--project` 才落在产品下、默认是草稿；草稿当前账号关联不了（没有 `project-linkStory` 权限）。
 - `iteration` 只有 `list` / `show`；把需求放进迭代用上面的 `story create --project`，不要以为得去网页端点「关联需求」。
+- 需求描述 / 验收标准（`--spec` / `--verify`）、任务描述（`--desc`）和 bug 重现步骤（`--steps`）支持轻量 Markdown（空行分段、`- ` / `1. ` 列表、`**粗体**`、`` `行内代码` ``、链接），CLI 提交前转成 HTML——禅道按 HTML 存正文，直接传纯文本会把换行折叠、列表挤成一行。
 - **执行前必须先跟用户确认改哪些 id、改成什么、指派给谁**，批量前先用 `--dry-run` 预览。
 - **默认不写备注**：`resolve` / `activate` / `task finish` 这些**不要加 `--comment`**，只改状态和指派，备注留空。分支名和 commit 号留在 git 提交里就够了。
 - 用户**明确要求写备注**时（「备注分支名」「写个备注」），走 `zentao-comment` 技能——那里有备注该怎么写的全部约定，包括先出草稿给用户确认。
