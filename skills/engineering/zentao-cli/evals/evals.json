@@ -5,23 +5,32 @@
       "id": 1,
       "name": "查编号取详情",
       "prompt": "禅道 #18399 是什么问题？复现步骤发我看看。",
-      "expected_output": "调用 zentao show 18399 --format json（必要时先 zentao status 确认登录），从 body 字段提取正文和复现步骤、从 steps 展开图片链接，如实汇报。不解析中文表格，不猜测内容，不读源码。若会话失效且无密码，说明需要用户提供密码。",
-      "files": []
+      "expected_output": "调用 zentao bug show 18399 --format json（必要时先 zentao status 确认登录）。注意命令是两级结构——zentao show 18399 已失效会报 invalid choice。从 body 字段提取正文和复现步骤、从 steps 展开图片链接，如实汇报。不解析中文表格，不猜测内容，不读源码。若会话失效且无密码，说明需要用户提供密码。"
     },
     {
       "id": 2,
       "name": "全公司未关闭",
       "prompt": "最近有哪些未关闭的 bug？",
-      "expected_output": "用 zentao list --scope unclosed --format json（默认 mine 只返回自己的，必须显式加 --scope unclosed 才是全公司）。提醒范围是未关闭；如需限定产品或很慢的全量可询问。不把 --scope mine 的结果当全公司结果。",
-      "files": []
+      "expected_output": "用 zentao bug list --scope unclosed --format json（默认 --scope mine 只返回自己的，必须显式加 --scope unclosed 才是全公司）。提醒范围是未关闭；如需限定产品或很慢的全量可询问。不把 --scope mine 的结果当全公司结果。注意 zentao list 这个一级写法已失效。"
     },
     {
       "id": 3,
       "name": "解决 bug 的写操作",
       "prompt": "把 #18399 标记为已解决。",
-      "expected_output": "写操作先跟用户确认范围和参数，然后用 zentao resolve 18399（可先 --dry-run 预览）。不要加 --comment。执行后核对返回的状态校验结果。",
-      "files": []
+      "expected_output": "写操作先跟用户确认范围和参数，然后用 zentao bug resolve 18399（可先 --dry-run 预览）。**不要加 --comment**——默认不写备注。执行后核对返回的状态校验结果。若用户要求写备注，改走 zentao-comment 技能。"
+    },
+    {
+      "id": 4,
+      "name": "迭代下的任务（两级结构）",
+      "prompt": "迭代 145 里有哪些任务？",
+      "expected_output": "用 zentao iteration show 145 --type task --format json（ref 支持 ID 或名称部分匹配）。注意 json 输出形状是 {project, story[], task[], bug[]}，不加 --type 时只返回 story。不要用已失效的 zentao iteration 145 直接写法。"
+    },
+    {
+      "id": 5,
+      "name": "需求建进迭代",
+      "prompt": "把「答题卡三方卡重构」这个需求建到迭代 Sprint26.11.2（149）里。",
+      "expected_output": "用 zentao story create --project 149（或 --project Sprint26.11.2）--title …，可先加 --dry-run 预览。说明这条路径走迭代上下文建需求，服务端在同一次请求里写 projectstory 关联，状态直接 active、阶段 projected——不需要 --no-review，也不要去网页端点「关联需求」（当前账号没有 project-linkStory 权限，草稿也关联不了）。写操作先跟用户确认标题/正文/产品/指派人，提交后回读 zentao iteration show 149 --type story --format json 确认新需求 ID 出现在列表里。不要用浏览器自动化代替 CLI。"
     }
   ],
-  "evaluation_notes": "执行模型只接收 prompt、必要的仓库上下文及 skill；expected_output 仅供评估者使用。真实查询需要 zentao CLI 可用且已配置账号密码，否则只能评估信息不足时的行为。"
+  "evaluation_notes": "执行模型只接收 prompt、必要的仓库上下文及 skill；expected_output 仅供评估者使用。真实查询需要 zentao CLI 可用且已配置账号密码，否则只能评估信息不足时的行为。本技能的命令语法已于 2026-10-16 按实际 CLI 核实（对象/动作两级结构）；story create --project 于 2026-11-23 按禅道 12.5.3 实测补充。"
 }
